@@ -1,0 +1,47 @@
+{
+  "name": "OptiBuddy",
+  "id": "965528608207399479",
+  "api": "1.0.0",
+  "editorType": ["figma"],
+  "main": "code.js",
+  "ui": {
+    "ui": "ui.html",
+    "grid": "grid.html",
+    "cleanup": "cleanup.html",
+    "changelog": "changelog.html"
+  },
+  "relaunchButtons": [{
+    "command": "openMenu",
+    "name": "Open menu",
+    "multipleSelection": true
+  }, {
+    "command": "generateAssets",
+    "name": "Organise Assets",
+    "multipleSelection": true
+  }, {
+    "command": "convertText",
+    "name": "Convert Text",
+    "multipleSelection": true
+  }, {
+    "command": "createGrid",
+    "name": "Calculate Grid",
+    "multipleSelection": true
+  }],
+  "menu": [{
+      "command": "openMenu",
+      "name": "Open menu"
+    },
+    {
+      "command": "fixColours",
+      "name": "Connect design system colours"
+    },
+    {
+      "command": "organiseAssets",
+      "name": "Organise assets"
+    },
+    {
+      "command": "cleanOut",
+      "name": "Clean outside my frames"
+    }
+  ]
+}

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        body * {
+            box-sizing: border-box;
+        }
+
+        label {
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 11px;
+            line-height: 13px;
+            margin-bottom: 8px;
+            color: #5B6971;
+        }
+
+        form {
+            margin: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 20px 16px;
+            column-gap: 12px;
+            row-gap: 20px;
+        }
+
+        input {
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            height: 36px;
+            outline: none;
+            padding: 12px;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 11px;
+            line-height: 13px;
+            color: #0F0F0F;
+        }
+
+        .formInput {
+            display: grid;
+        }
+
+        .demonstration {
+            padding: 20px;
+            width: 100%;
+            padding-top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .demoGrid {
+            display: inline-grid;
+            grid-auto-flow: column;
+            grid-auto-columns: auto;
+            height: 100px;
+            overflow: auto;
+            border: 1px solid #B0BDC5;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 11px;
+            line-height: 13px;
+            text-align: center;
+            max-width: 362px;
+            color: #5B6971;
+        }
+
+        .demoGrid>* {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+
+        .margin,
+        .gutter {
+            background: #E7EBED;
+        }
+
+        .box {
+            background: white;
+            max-width: 140px;
+        }
+
+        .error {
+            border-color: red;
+        }
+
+        .boxWidth {
+            display: flex;
+            max-width: 100%;
+            font-family: Roboto;
+            align-items: center;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 11px;
+            width: 362px;
+            line-height: 13px;
+            text-align: center;
+            color: #5B6971;
+            margin-bottom: 11px;
+        }
+
+        .line {
+            height: 1px;
+            flex-grow: 1;
+            background-color: #B0BDC5;
+            position: relative;
+        }
+
+        .width {
+            margin: 0 10px;
+        }
+
+        .resultContainer {
+            display: none;
+            overflow: hidden;
+            border-radius: 2px;
+            padding: 9px 16px;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 14px;
+        }
+
+        .resultContainer.error {
+            background: #FFF4EB;
+            color: #D2431E;
+        }
+
+        .resultContainer.success {
+            background: #EFFBF6;
+            color: #00B16A;
+        }
+
+        .backButton {
+            border-top: 1px solid #E7EBED;
+            text-align: center;
+            padding: 14px 0;
+            background: #F7F8F9;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 11px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            cursor: pointer;
+            align-content: center;
+            justify-content: center;
+            line-height: 13px;
+            color: #5B6971;
+            transition: 0.3s all;
+        }
+
+        .backButton:hover {
+            background-color: #F1F3F4;
+        }
+    </style>
+
+    <div class="innerFrame">
+        <form>
+            <div class="formInput">
+                <label for="layoutWidth">Layout Width</label>
+                <input type="number" name="layoutWidth" value="360" min="1" oninput="changeWidth(this)">
+            </div>
+            <div class="formInput">
+                <label for="columns">Columns</label>
+                <input type="number" name="columns" value="2" min="1" oninput="changeColumns(this)">
+            </div>
+            <div class="formInput">
+                <label for="margin">Margin</label>
+                <input type="number" name="margin" value="20" min="0" oninput="changeMargin(this)">
+            </div>
+            <div class="formInput">
+                <label for="gutter">Gutter</label>
+                <input type="number" name="gutter" value="40" min="0" oninput="changeGutter(this)">
+            </div>
+        </form>
+        <div class="resultContainer error">
+            The values you entered are invalid. Please adjust the values so that the box is able to fit.
+        </div>
+        <div class="demonstration">
+            <div class="boxWidth">
+                <div class="line left"></div>
+                <span class="width">
+                    360
+                </span>
+                <div class="line right"></div>
+            </div>
+            <div class="demoGrid">
+                <div class="margin" style="width: 20px">20</div>
+                <div class="box" style="width: 140px">140</div>
+                <div class="gutter" style="width: 40px">40</div>
+                <div class="box" style="width: 140px">140</div>
+                <div class="margin" style="width: 20px">20</div>
+            </div>
+        </div>
+        <div class="backButton" onclick="goBack()">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 3.5H1.915L4.71 0.705L4 0L0 4L4 8L4.705 7.295L1.915 4.5H8V3.5Z" fill="#5B6971" />
+            </svg>
+            Back
+        </div>
+    </div>
+
+
+    <script>
+        let margin = 20
+        let gutter = 40
+        let columns = 2
+        let width = 360
+        let boxSize = 140
+        let calc = (width - (margin * 2) - (gutter * (columns - 1))) / columns
+        let logCalc = `(${width} - (${margin} * 2) - (${gutter} * (${columns} - 1))) / ${columns})`
+
+        function goBack() {
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'open-menu',
+                }
+            }, '*')
+        }
+
+        function changeWidth(el) {
+            width = el.value
+            calc = (width - (margin * 2) - (gutter * (columns - 1))) / columns
+            let boxSize = (width / columns) - (margin * 2) - (gutter * (columns - 1))
+            if (calc < 1 || !Number.isInteger(calc) || calc == Infinity) {
+                el.classList.add("error")
+                displayError()
+            } else {
+                el.classList.remove("error")
+                resizeBox()
+            }
+        }
+
+        function changeColumns(el) {
+            columns = el.value
+            calc = (width - (margin * 2) - (gutter * (columns - 1))) / columns
+            if (calc < 1 || !Number.isInteger(calc) || calc == Infinity) {
+                el.classList.add("error")
+                displayError()
+            } else {
+                el.classList.remove("error")
+                resizeBox()
+            }
+        }
+
+        function changeGutter(el) {
+            gutter = el.value
+            calc = (width - (margin * 2) - (gutter * (columns - 1))) / columns
+            if (calc < 1 || !Number.isInteger(calc) || calc == Infinity) {
+                el.classList.add("error")
+                displayError()
+            } else {
+                el.classList.remove("error")
+                resizeBox()
+            }
+        }
+
+        function changeMargin(el) {
+            margin = el.value
+            calc = (width - (margin * 2) - (gutter * (columns - 1))) / columns
+            if (calc < 1 || !Number.isInteger(calc) || calc == Infinity) {
+                el.classList.add("error")
+                displayError()
+            } else {
+                el.classList.remove("error")
+                resizeBox()
+            }
+        }
+
+        function resizeBox() {
+            calc = (width - (margin * 2) - (gutter * (columns - 1))) / columns
+            document.querySelectorAll(".error").forEach(q => {
+                if (q.classList.contains("resultContainer")) return
+                q.classList.remove('error')
+            })
+            if (calc < 1 || !Number.isInteger(calc)) {
+                document.querySelector('.width').style.color = '#F22A42'
+                displayError()
+            } else {
+                document.querySelector('.width').style.color = ''
+                let divider = 360 / width
+                document.querySelector('.width').innerHTML = width;
+                let grid = `
+            <div class="margin" style="width:20px">${margin}</div>
+            <div class="box" style="width:140px">${calc}</div>
+            <div class="gutter" style="width:40px">${gutter}</div>
+            <div class="box" style="width:140px">${calc}</div>
+            `
+                grid += `<div class="margin" style="width:20px">${margin}</div>`
+                parent.postMessage({
+                    pluginMessage: {
+                        type: 'grid',
+                        width: width,
+                        columns: columns,
+                        gutter: gutter,
+                        boxWidth: calc,
+                        margin: margin
+                    }
+                }, '*')
+                document.querySelector('.demoGrid').innerHTML = grid;
+                document.querySelector('.boxWidth').style.width = document.querySelector('.demoGrid').clientWidth +
+                    'px';
+
+            }
+        }
+
+        function displayError() {
+            document.querySelectorAll('.demoGrid .box').forEach(m => {
+                m.innerHTML = "N/A"
+                m.style.color = '#F22A42'
+            })
+        }
+        parent.postMessage({
+            pluginMessage: {
+                type: 'grid',
+                width: width,
+                columns: columns,
+                gutter: gutter,
+                boxWidth: boxSize,
+                margin: margin
+            }
+        }, '*')
+    </script>
+
+</body>
+
+</html>

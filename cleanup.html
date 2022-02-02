@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/glassesUSA/dsm@3.8.435/dist/styles.css">
+    <script type="module" src="https://cdn.jsdelivr.net/gh/glassesUSA/dsm@3.8.435/dist/dsm-effects.js">
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        body * {
+            box-sizing: border-box;
+        }
+
+        .resultContainer {
+            display: none;
+            width: 100%;
+            border-radius: 2px;
+            padding: 9px 16px;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 14px;
+        }
+
+        .resultContainer.error {
+            background: #FFF4EB;
+            color: #D2431E;
+        }
+
+        .resultContainer.success {
+            background: #EFFBF6;
+            color: #00B16A;
+        }
+
+        .formBackground {
+            width: 100%;
+            min-width: 0;
+            margin-bottom: 0;
+            background: #F7F8F9;
+            border: 1px solid #E5E5E5;
+            border-radius: 4px;
+            padding: 16px;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 14px;
+            color: #3A4850;
+        }
+
+        .formRow {
+            display: flex;
+            cursor: pointer;
+            gap: 10px;
+            align-items: center;
+            align-content: center;
+        }
+
+        .formRow:hover .checkbox {
+            border: 1px solid #6b6b6b;
+        }
+
+        .formRow:nth-child(n+2) {
+            margin-top: 11px;
+        }
+
+        .selectAll {
+            margin-bottom: 12px;
+            padding: 15px;
+        }
+
+        .cleanupButton {
+            background: #FFFFFF;
+            border: 1px solid #0F0F0F;
+            box-sizing: border-box;
+            border-radius: 4px;
+            padding: 8px 14px;
+            margin-top: 20px;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 22px;
+            display: inline-flex;
+            cursor: pointer;
+            align-items: center;
+            text-align: center;
+            transition: 0.3s all;
+            gap: 8px;
+            color: #0F0F0F;
+        }
+
+        .cleanupButton:hover {
+            color: #2196F3;
+            border-color: #2196F3;
+        }
+
+        .cleanupButton svg * {
+            transition: 0.3s all;
+        }
+
+        .cleanupButton:hover svg * {
+            fill: #2196F3;
+        }
+
+        .backButton {
+            width: 100%;
+            border-top: 1px solid #E7EBED;
+            text-align: center;
+            padding: 14px 0;
+            background: #F7F8F9;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 11px;
+            flex-grow: 1;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            cursor: pointer;
+            align-content: center;
+            justify-content: center;
+            line-height: 13px;
+            color: #5B6971;
+            transition: 0.3s all;
+        }
+
+        .backButton:hover {
+            background-color: #F1F3F4;
+        }
+
+        .innerPadding {
+            padding: 20px;
+            width: 100%;
+        }
+
+        .innerFrame {
+            background-color: #fff;
+            overflow: auto;
+            display: flex;
+            height: 100%;
+            width: 100%;
+            justify-content: flex-start;
+            align-content: flex-start;
+            align-items: flex-start;
+            transition: 0.3s all;
+            flex-direction: column;
+        }
+    </style>
+
+    <div class="innerFrame">
+        <div class="resultContainer">This is an error</div>
+        <div class="innerPadding">
+            <div class="formBackground selectAll">
+                <div class="formRow">
+                    <label class="checkboxContainer" checked></label>
+                    Select all
+                </div>
+            </div>
+            <div class="formBackground">
+                <div class="formRow">
+                    <label class="checkboxContainer" id="reset-constraints"></label>
+                    Reset all constraints
+                </div>
+                <!-- <div class="formRow">
+                    <label class="checkboxContainer" id="convert-buttons"></label>
+                    Convert buttons to components
+                </div> -->
+                <div class="formRow">
+                    <label class="checkboxContainer" id="connect-colours"></label>
+                    Connect colours to design system
+                </div>
+                <div class="formRow">
+                    <label class="checkboxContainer" id="detach-components"></label>
+                    Detach local components
+                </div>
+                <div class="formRow">
+                    <label class="checkboxContainer" id="cleanup-groups"></label>
+                    Cleanup empty groups
+                </div>
+                <div class="formRow">
+                    <label class="checkboxContainer" id="cleanup-frames"></label>
+                    Convert frames to groups
+                </div>
+            </div>
+            <div class="cleanupButton" onclick="runCleanup()">
+                Run cleanup
+                <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M13.9004 11.4429L8.0831 5.62563C8.65844 4.15532 8.33881 2.42931 7.12421 1.2147C5.84568 -0.0638251 3.92788 -0.319531 2.39365 0.38366L5.14248 3.1325L3.22469 5.05029L0.411925 2.30145C-0.355193 3.83569 -0.0355604 5.75348 1.24297 7.03201C2.45757 8.24662 4.18359 8.56625 5.6539 7.99091L11.4712 13.8082C11.7269 14.0639 12.1105 14.0639 12.3662 13.8082L13.8365 12.3379C14.1561 12.0822 14.1561 11.6347 13.9004 11.4429Z"
+                        fill="#0F0F0F" />
+                </svg>
+            </div>
+        </div>
+        <div class="backButton" onclick="goBack()">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 3.5H1.915L4.71 0.705L4 0L0 4L4 8L4.705 7.295L1.915 4.5H8V3.5Z" fill="#5B6971" />
+            </svg>
+            Back
+        </div>
+    </div>
+    <script>
+        function goBack() {
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'open-menu',
+                }
+            }, '*')
+        }
+        document.querySelectorAll('.formRow').forEach(r =>
+            r.addEventListener("click", e => {
+                checkboxClick(e)
+            }))
+        document.querySelectorAll('.formRow label').forEach(r =>
+            r.addEventListener("click", e => {
+                e.stopImmediatePropagation()
+                e.stopPropagation()
+                checkboxClick(e)
+            }))
+
+        function checkboxClick(e) {
+            let selectInput = document.querySelector('.formBackground.selectAll .formRow input')
+            let el = e.target.closest('.formRow')
+            if (e.target.closest('.formBackground.selectAll')) {
+                if (selectInput.checked == false) {
+                    selectInput.checked = true
+                    document.querySelectorAll('.formBackground:not(.selectAll) .formRow input').forEach(r =>
+                        r.checked = false)
+                } else {
+                    selectInput.checked = false
+                    document.querySelectorAll('.formBackground:not(.selectAll) .formRow input').forEach(r =>
+                        r.checked = true)
+                }
+            } else if (selectInput.checked) {
+                selectInput.checked = false
+                el.querySelector('input').checked = el.querySelector('input').checked ?
+                    false : true;
+            } else {
+                el.querySelector('input').checked = el.querySelector('input').checked ?
+                    false : true;
+            }
+        }
+
+        onmessage = (e => {
+            e = e.data.pluginMessage
+
+            if (e.type == 'error') {
+                return message(e.data, 'error')
+            } else {
+                return message(e.data, 'success')
+            }
+        })
+
+        function runCleanup() {
+            let selectInput = document.querySelector('.formBackground.selectAll .formRow input')
+            let args = []
+            if (selectInput.checked) {
+                args = "all"
+            } else {
+                document.querySelectorAll('.formBackground .formRow input:checked').forEach(e => args.push(e
+                    .closest(
+                        'label').id))
+                if (!args.length) {
+                    return message("Please select an option!", 'error')
+                }
+            }
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'run-cleanup',
+                    args: args
+                }
+            }, '*')
+        }
+
+        function message(msg, type) {
+            document.querySelector('.resultContainer').innerHTML = msg;
+            document.querySelector('.resultContainer').style.display = "block"
+            let height = document.querySelector('.resultContainer').offsetHeight
+            document.querySelector('.resultContainer').classList = ` resultContainer ${type}`
+
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'resize-box',
+                    args: height
+                }
+            }, '*')
+        }
+    </script>
+
+</body>
+
+</html>

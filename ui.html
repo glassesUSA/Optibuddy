@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/glassesUSA/dsm@latest/dist/styles.css">
+  <!-- Scripts - Required if you are using any form elements/buttons-->
+  <script type="module" src="https://cdn.jsdelivr.net/gh/glassesUSA/dsm@latest/dist/dsm-effects.js">
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+    }
+
+    body * {
+      box-sizing: border-box;
+    }
+
+    .innerGrid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .gridItem {
+      padding-top: 28px;
+      border-left: 1px solid;
+      border-bottom: 1px solid;
+      border-color: #E5E5E5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: 0.3s all;
+      align-items: center;
+    }
+
+    .gridItem:first-of-type {
+      border-left: none;
+    }
+
+    .gridItem:nth-child(5) {
+      border-left: none;
+    }
+
+    .gridItem span {
+      margin-top: 19px;
+      margin-bottom: 12px;
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 11px;
+      line-height: 13px;
+      text-align: center;
+      color: #5B6971;
+    }
+
+    .gridItem .loader {
+      top: 50%;
+      background-color: rgba(241, 241, 241, 0.8);
+      width: 100%;
+      left: 50%;
+      display: none;
+      pointer-events: none;
+      justify-content: center;
+      cursor: none;
+      align-items: center;
+      height: 100%;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      position: absolute;
+    }
+
+    .loader svg {
+      width: 100%;
+      padding: 20px;
+    }
+
+    .disabled.gridItem .loader {
+      display: flex;
+    }
+
+    .gridItem:hover {
+      background-color: #F7F8F9;
+    }
+
+    .styleCheck {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: 0.3s all;
+      flex-grow: 1;
+    }
+
+    .styleCheck:not(.complete) {
+      cursor: pointer;
+
+    }
+
+    .styleCheck span {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 14px;
+      margin-top: 10px;
+      line-height: 16px;
+      text-align: center;
+      color: #000000;
+    }
+
+    .styleCheck:hover:not(.complete) {
+      background-color: #F7F8F9;
+    }
+
+    .resultContainer {
+      display: none;
+      overflow: hidden;
+      border-radius: 2px;
+      padding: 9px 16px;
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 14px;
+    }
+
+    .resultContainer.error {
+      background: #FFF4EB;
+      color: #D2431E;
+    }
+
+    .resultContainer.success {
+      background: #EFFBF6;
+      color: #00B16A;
+    }
+
+    .styleCheck-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    .styleCheck-top span {
+      margin: 0;
+    }
+
+    .runAgain {
+      font-family: Roboto;
+      font-style: normal;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 14px;
+      color: #000000;
+    }
+
+    .runAgain span {
+      margin-left: 6px;
+      text-decoration: underline;
+    }
+
+    .styleCheck.complete {
+      display: none;
+      text-align: left;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 20px;
+      background: #F7F8F9;
+      border: 1px solid #E5E5E5;
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 17px;
+      color: #3A4850;
+    }
+
+    .styleTitle {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 14px;
+      text-decoration: underline;
+      color: #D2431E;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+
+    .styleCheck.complete .styleTitle:nth-child(n+3) {
+      margin-top: 16px;
+    }
+
+    .innerFrame {
+      display: flex;
+      transition: 0.3s all;
+      height: 100%;
+      flex-direction: column;
+    }
+
+    .resultContainer {
+      display: block;
+    }
+
+    .resultContainer a {
+      color: inherit;
+    }
+  </style>
+
+  <div class="innerFrame">
+    <div class="resultContainer success">Thank you for using OptiBuddy! Please fill out <a
+        href="https://forms.gle/RuMUSJKuDYCSkQYW8" target="_blank">this short
+        survey</a> on how
+      it can be improved further!</div>
+    <div class="innerGrid">
+      <div class="gridItem" onclick="addFrame(375, this)" draggable="true" ondragstart="resetOffset(event)"
+        ondragend="dropFrame(375, event)">
+        <svg width="17" height="28" viewBox="0 0 17 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M13.3636 0H3.18182C1.42545 0 0 1.42545 0 3.18182V24.8182C0 26.5745 1.42545 28 3.18182 28H13.3636C15.12 28 16.5455 26.5745 16.5455 24.8182V3.18182C16.5455 1.42545 15.12 0 13.3636 0ZM8.27273 26.7273C7.21636 26.7273 6.36364 25.8745 6.36364 24.8182C6.36364 23.7618 7.21636 22.9091 8.27273 22.9091C9.32909 22.9091 10.1818 23.7618 10.1818 24.8182C10.1818 25.8745 9.32909 26.7273 8.27273 26.7273ZM14 21.6364H2.54545V3.81818H14V21.6364Z"
+            fill="#0F0F0F" />
+        </svg>
+        <div class="loader">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            style="margin: auto; background: none; display: block; shape-rendering: auto;" width="78px" height="78px"
+            viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <circle cx="50" cy="50" fill="none" stroke="#89959c" stroke-width="10" r="35"
+              stroke-dasharray="164.93361431346415 56.97787143782138">
+              <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="2s"
+                values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+            </circle>
+          </svg> </div>
+        <span>375 Res</span>
+      </div>
+      <div class="gridItem" onclick="addFrame(1024, this)" ondragstart="resetOffset(event)"
+        ondragend="dropFrame(1024, event)" draggable="true">
+        <svg width="23" height="28" viewBox="0 0 23 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M19.25 0H2.91667C1.30667 0 0 1.30667 0 2.91667V25.0833C0 26.6933 1.30667 28 2.91667 28H19.25C20.86 28 22.1667 26.6933 22.1667 25.0833V2.91667C22.1667 1.30667 20.86 0 19.25 0ZM11.0833 26.8333C10.115 26.8333 9.33333 26.0517 9.33333 25.0833C9.33333 24.115 10.115 23.3333 11.0833 23.3333C12.0517 23.3333 12.8333 24.115 12.8333 25.0833C12.8333 26.0517 12.0517 26.8333 11.0833 26.8333ZM19.8333 22.1667H2.33333V3.5H19.8333V22.1667Z"
+            fill="#0F0F0F" />
+        </svg>
+        <div class="loader">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            style="margin: auto; background: none; display: block; shape-rendering: auto;" width="78px" height="78px"
+            viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <circle cx="50" cy="50" fill="none" stroke="#89959c" stroke-width="10" r="35"
+              stroke-dasharray="164.93361431346415 56.97787143782138">
+              <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="2s"
+                values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+            </circle>
+          </svg> </div>
+        <span>1024 Res</span>
+      </div>
+      <div class="gridItem" onclick="addFrame(1280, this)" ondragstart="resetOffset(event)"
+        ondragend="dropFrame(1280, event)" draggable="true">
+        <svg width="42" height="28" viewBox="0 0 42 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M35 24.5C36.925 24.5 38.4825 22.925 38.4825 21L38.5 3.5C38.5 1.575 36.925 0 35 0H7C5.075 0 3.5 1.575 3.5 3.5V21C3.5 22.925 5.075 24.5 7 24.5H0V28H42V24.5H35ZM7 3.5H35V21H7V3.5Z"
+            fill="#0F0F0F" />
+        </svg>
+        <div class="loader">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            style="margin: auto; background: none; display: block; shape-rendering: auto;" width="78px" height="78px"
+            viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <circle cx="50" cy="50" fill="none" stroke="#89959c" stroke-width="10" r="35"
+              stroke-dasharray="164.93361431346415 56.97787143782138">
+              <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="2s"
+                values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+            </circle>
+          </svg>
+        </div>
+        <span>1280 Res</span>
+      </div>
+      <div class="gridItem" onclick="addFrame(1440, this)" ondragstart="resetOffset(event)"
+        ondragend="dropFrame(1440, event)" draggable="true">
+        <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M31.5 23.3333C33.425 23.3333 34.9825 21.7583 34.9825 19.8333L35 3.5C35 1.575 33.425 0 31.5 0H3.5C1.575 0 0 1.575 0 3.5V19.8333C0 21.7583 1.575 23.3333 3.5 23.3333H14L12.8333 26.25L12.4694 27.3419C12.3614 27.6657 12.6024 28 12.9437 28H17.5H22.0563C22.3976 28 22.6385 27.6657 22.5306 27.3419L22.1667 26.25L21 23.3333H31.5ZM3.5 3.5H31.5V19.8333H3.5V3.5Z"
+            fill="#0F0F0F" />
+        </svg>
+        <div class="loader">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            style="margin: auto; background: none; display: block; shape-rendering: auto;" width="78px" height="78px"
+            viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <circle cx="50" cy="50" fill="none" stroke="#89959c" stroke-width="10" r="35"
+              stroke-dasharray="164.93361431346415 56.97787143782138">
+              <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="2s"
+                values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+            </circle>
+          </svg>
+        </div>
+        <span>1440 Res</span>
+      </div>
+      <div class="gridItem" onclick="convertText()">
+        <svg width="25" height="28" viewBox="0 0 25 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M12.0556 0H9.72222L2.33333 17.1111H5.6L7 13.6889H14.7778L16.1778 17.1111H19.4444L12.0556 0ZM7.98 10.8889L10.8889 3.08L13.7978 10.8889H7.98ZM24.1111 23.3333L19.4444 18.6667V21.7778H0V24.8889H19.4444V28L24.1111 23.3333Z"
+            fill="black" />
+        </svg>
+
+        <span>Convert text</span>
+      </div>
+      <div class="gridItem" onclick="cleanupDoc()">
+        <svg width="26" height="28" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M22.4 2.8H16.548C15.96 1.176 14.42 0 12.6 0C10.78 0 9.24 1.176 8.652 2.8H2.8C1.26 2.8 0 4.06 0 5.6V25.2C0 26.74 1.26 28 2.8 28H22.4C23.94 28 25.2 26.74 25.2 25.2V5.6C25.2 4.06 23.94 2.8 22.4 2.8ZM12.6 2.8C13.37 2.8 14 3.43 14 4.2C14 4.97 13.37 5.6 12.6 5.6C11.83 5.6 11.2 4.97 11.2 4.2C11.2 3.43 11.83 2.8 12.6 2.8Z"
+            fill="black" />
+          <path
+            d="M18.8428 19.8082L13.8866 14.822C14.3768 13.5617 14.1045 12.0823 13.0697 11.0412C11.9804 9.94529 10.3465 9.72612 9.03933 10.3289L11.3813 12.685L9.74737 14.3288L7.35095 11.9727C6.69738 13.2877 6.9697 14.9316 8.05898 16.0274C9.0938 17.0685 10.5643 17.3425 11.817 16.8494L16.7732 21.8356C16.9911 22.0548 17.3179 22.0548 17.5357 21.8356L18.7884 20.5754C19.0607 20.3562 19.0607 19.9726 18.8428 19.8082Z"
+            fill="white" />
+        </svg>
+
+        <span>Cleanup Doc</span>
+      </div>
+      <div class="gridItem" onclick="createGrid()">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M0 0V26H26V0H0ZM11.5556 23.1111H2.88889V14.4444H11.5556V23.1111ZM11.5556 11.5556H2.88889V2.88889H11.5556V11.5556ZM23.1111 23.1111H14.4444V14.4444H23.1111V23.1111ZM23.1111 11.5556H14.4444V2.88889H23.1111V11.5556Z"
+            fill="black" />
+        </svg>
+        <span>Calculate grid</span>
+      </div>
+      <div class="gridItem" onclick="organiseAssets()">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M26 23.1111V2.88889C26 1.3 24.7 0 23.1111 0H2.88889C1.3 0 0 1.3 0 2.88889V23.1111C0 24.7 1.3 26 2.88889 26H23.1111C24.7 26 26 24.7 26 23.1111ZM7.94444 15.1667L11.5556 19.5144L16.6111 13L23.1111 21.6667H2.88889L7.94444 15.1667Z"
+            fill="black" />
+        </svg>
+        <span>Organise assets</span>
+      </div>
+    </div>
+    <div class="styleCheck" onclick="runStyles()">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M12.8645 11.3208H12.0515L11.7633 11.0429C12.7719 9.86964 13.3791 8.34648 13.3791 6.68954C13.3791 2.99485 10.3842 0 6.68954 0C2.99485 0 0 2.99485 0 6.68954C0 10.3842 2.99485 13.3791 6.68954 13.3791C8.34648 13.3791 9.86964 12.7719 11.0429 11.7633L11.3208 12.0515V12.8645L16.4666 18L18 16.4666L12.8645 11.3208ZM6.68954 11.3208C4.12693 11.3208 2.05832 9.25214 2.05832 6.68954C2.05832 4.12693 4.12693 2.05832 6.68954 2.05832C9.25214 2.05832 11.3208 4.12693 11.3208 6.68954C11.3208 9.25214 9.25214 11.3208 6.68954 11.3208Z"
+          fill="black" />
+      </svg>
+      <span>Run a style check</span>
+    </div>
+    <div class="styleCheck complete">
+      <div class="styleCheck-top">
+        <span>Style checkup complete:</span>
+        <div class="runAgain" onclick="runStyles()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M8.57633 7.54717H8.03431L7.8422 7.36192C8.51458 6.57976 8.91938 5.56432 8.91938 4.45969C8.91938 1.99657 6.92281 0 4.45969 0C1.99657 0 0 1.99657 0 4.45969C0 6.92281 1.99657 8.91938 4.45969 8.91938C5.56432 8.91938 6.57976 8.51458 7.36192 7.8422L7.54717 8.03431V8.57633L10.9777 12L12 10.9777L8.57633 7.54717ZM4.45969 7.54717C2.75129 7.54717 1.37221 6.1681 1.37221 4.45969C1.37221 2.75129 2.75129 1.37221 4.45969 1.37221C6.1681 1.37221 7.54717 2.75129 7.54717 4.45969C7.54717 6.1681 6.1681 7.54717 4.45969 7.54717Z"
+              fill="black" />
+          </svg>
+          <span>
+            Run again
+          </span>
+        </div>
+      </div>
+      <div id="checkContent"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"
+    integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    function organiseAssets() {
+      axios.post('https://optibuddy.freud-online.co.uk/', {
+        event: 'organise assets clicked'
+      })
+      parent.postMessage({
+        pluginMessage: {
+          type: 'generate-assets'
+        }
+      }, '*')
+    }
+
+    function createGrid() {
+      axios.post('https://optibuddy.freud-online.co.uk/', {
+        event: 'calculate grid clicked'
+      }).then(() =>
+        parent.postMessage({
+          pluginMessage: {
+            type: 'create-grid'
+          }
+        }, '*'))
+    }
+    parent.postMessage({
+      pluginMessage: {
+        type: 'menu-opened'
+      }
+    }, '*')
+
+    function addFrame(size, el) {
+      if (el.classList.contains("disabled")) return
+      axios.post('https://optibuddy.freud-online.co.uk/', {
+        event: size + ' clicked'
+      })
+      el.classList.add("disabled");
+      parent.postMessage({
+        pluginMessage: {
+          type: 'add-frame',
+          params: size
+        }
+      }, '*')
+    }
+
+    function convertText() {
+      axios.post('https://optibuddy.freud-online.co.uk/', {
+        event: 'convert text clicked'
+      })
+      parent.postMessage({
+        pluginMessage: {
+          type: 'convert-text'
+        }
+      }, '*')
+    }
+    let offsetX = 0
+    let offsetY = 0
+
+    function resetOffset(e) {
+      offsetX = e.offsetX
+      offsetY = e.offsetY
+    }
+
+    function dropFrame(size, e) {
+      if (e.view.length === 0) return
+      const dropPosition = {
+        clientX: e.clientX,
+        clientY: e.clientY
+      };
+      const windowSize = {
+        width: window.outerWidth,
+        height: window.outerHeight
+      };
+
+      const offset = {
+        x: offsetX,
+        y: offsetY
+      };
+
+      const itemSize = {
+        width: e.target.clientWidth,
+        height: e.target.clientHeight
+      };
+      e.target.classList.add("disabled");
+
+      parent.postMessage({
+        pluginMessage: {
+          type: 'dropFrame',
+          args: {
+            dropPosition,
+            windowSize,
+            offset,
+            itemSize,
+            size
+          }
+        }
+      }, '*')
+    }
+    let errorCount = 0;
+    onmessage = (e) => {
+      if (e.data.pluginMessage.type == 'error') {
+        document.querySelector('.styleCheck.complete').style.display = "none";
+        document.querySelector('.styleCheck').style.display = "flex";
+        document.querySelector('.resultContainer').classList.remove('success')
+        document.querySelector('.resultContainer').classList.add('error')
+        document.querySelector('.resultContainer').innerHTML = e.data.pluginMessage.data
+        document.querySelector('.resultContainer').style.display = 'flex'
+      }
+      if (e.data.pluginMessage.type == 'success') {
+        document.querySelector('.styleCheck.complete').style.display = "none";
+        document.querySelector('.styleCheck').style.display = "flex";
+        setTimeout(() => document.querySelectorAll('.disabled').forEach(a => a.classList.remove("disabled")), 300)
+        document.querySelector('.resultContainer').classList.remove('error')
+        document.querySelector('.resultContainer').classList.add('success')
+        document.querySelector('.resultContainer').innerHTML = e.data.pluginMessage.data
+        document.querySelector('.resultContainer').style.display = 'flex'
+      }
+
+      if (e.data.pluginMessage.type == "style") {
+        setTimeout(() => document.querySelectorAll('.disabled').forEach(a => a.classList.remove("disabled")), 300)
+        document.querySelector('.resultContainer').classList.remove('error', "success")
+        document.querySelector('.resultContainer').style.display = 'none'
+        document.querySelector('#checkContent').innerHTML = e.data.pluginMessage.data
+        document.querySelector('.styleCheck.complete').style.display = "block";
+        document.querySelector('.styleCheck').style.display = "none";
+      }
+    }
+
+    function selectNode(id) {
+      parent.postMessage({
+        pluginMessage: {
+          type: 'select-node',
+          params: id
+        }
+      }, '*')
+    }
+
+    function runStyles() {
+      axios.post('https://optibuddy.freud-online.co.uk/', {
+        event: 'run style check clicked'
+      })
+      parent.postMessage({
+        pluginMessage: {
+          type: 'check-styles'
+        }
+      }, '*')
+    }
+
+    function cleanupDoc() {
+      axios.post('https://optibuddy.freud-online.co.uk/', {
+        event: 'cleanup doc clicked'
+      }).then(() => {
+        parent.postMessage({
+          pluginMessage: {
+            type: 'open-cleanup'
+          }
+        }, '*')
+      })
+    }
+  </script>
+
+</body>
+
+</html>

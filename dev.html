@@ -1,0 +1,414 @@
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/glassesUSA/dsm@latest/dist/styles.css">
+ <!-- Scripts - Required if you are using any form elements/buttons-->
+ <script type="module" src="https://cdn.jsdelivr.net/gh/glassesUSA/dsm@latest/dist/dsm-effects.js">
+ </script>
+
+ <style>
+     body {
+         margin: 0;
+     }
+
+     h2 {
+         font-family: Roboto;
+         font-style: normal;
+         font-weight: bold;
+         font-size: 18px;
+         margin: 0;
+         line-height: 21px;
+     }
+
+     .innerFrame {
+         padding: 20px 25px;
+         box-sizing: border-box;
+     }
+
+     .gridChooser {
+         display: grid;
+         grid-auto-flow: column;
+         grid-auto-columns: auto;
+         justify-content: flex-start;
+         margin-top: 20px;
+         gap: 25px;
+         margin-bottom: 35px;
+         font-family: Roboto;
+         font-style: normal;
+         font-weight: 300;
+         font-size: 13px;
+         line-height: 15px;
+     }
+
+     .gridItem {
+         display: flex;
+         cursor: pointer;
+         flex-direction: column;
+         text-align: center;
+         gap: 9px;
+     }
+
+     .gridItem svg * {
+         transition: 0.3s all;
+     }
+
+     .gridItem:hover svg * {
+         fill: #B0BDC5;
+     }
+
+     .actionGrid {
+         margin-top: 14px;
+         display: grid;
+         grid-auto-flow: column;
+         grid-auto-columns: auto;
+         justify-content: flex-start;
+         gap: 14px;
+     }
+
+     .actionItem {
+         display: flex;
+         flex-direction: column;
+         padding: 15px 20px;
+         justify-content: center;
+         align-items: center;
+         align-content: center;
+         gap: 18px;
+         background: #F7F8F9;
+         border: 1px solid #F8F8F8;
+         box-sizing: border-box;
+         box-shadow: 0px 1px 0px rgba(58, 72, 80, 0.07), 0px 2px 11px -1px rgba(176, 189, 197, 0.12);
+         border-radius: 4px;
+         text-align: center;
+         font-family: Roboto;
+         font-style: normal;
+         font-weight: 500;
+         font-size: 12px;
+         line-height: 14px;
+         transition: 0.3s all;
+         cursor: pointer;
+         text-align: center;
+         letter-spacing: 0.05em;
+     }
+
+     .actionItem:hover {
+         background-color: #F1F3F4;
+     }
+
+     .actionItem svg {
+         height: 52px;
+     }
+
+     #getcolours {
+         display: none;
+     }
+
+     .resultBox {
+         display: none;
+         background: #EFFBF6;
+         border: 1px solid #00B16A;
+         box-sizing: border-box;
+         border-radius: 4px;
+         margin-top: 30px;
+         padding: 15px;
+         color: rgba(15, 15, 15, 1);
+     }
+
+     .resultBox.error {
+         background: #FFF1F4;
+         border: 1px solid #D2431E;
+         color: rgba(210, 67, 30, 1);
+     }
+
+     .resultBox.error .resultData {
+         font-weight: 400;
+     }
+
+     .resultTitle {
+         font-family: Roboto;
+         font-style: normal;
+         font-weight: normal;
+         font-size: 14px;
+         line-height: 20px;
+         padding-bottom: 10px;
+         display: none;
+     }
+
+     .resultData {
+         font-family: Roboto;
+         line-height: 20px;
+         font-style: normal;
+         font-weight: 500;
+         font-size: 12px;
+         letter-spacing: 0.05em;
+     }
+
+     .resultData>div {
+         transition: 0.2s all;
+     }
+
+     .resultData>div:hover {
+         text-decoration: underline;
+     }
+
+     .disabled {
+         pointer-events: none;
+         color: rgba(222, 222, 222, 1);
+         background: #FFFFFF;
+     }
+
+     .gridChooser.disabled svg * {
+         fill: #DEDEDE
+     }
+
+     .loading {
+         background: #FFF5E3;
+         border: 1px solid #EAB02F;
+     }
+ </style>
+ <div class="innerFrame">
+     <span id="getcolours">Get all colours</span>
+     <h2>Layouts</h2>
+     <div class="gridChooser">
+         <div class="gridMobile gridItem">
+             <svg width="45" height="80" viewBox="0 0 45 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <rect width="13" height="80" fill="#89959C" />
+                 <rect x="16" width="13" height="80" fill="#89959C" />
+                 <rect x="32" width="13" height="80" fill="#89959C" />
+             </svg>
+             Mobile
+         </div>
+         <div class="gridTablet gridItem">
+             <svg width="93" height="80" viewBox="0 0 93 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <rect width="13" height="80" fill="#89959C" />
+                 <rect x="48" width="13" height="80" fill="#89959C" />
+                 <rect x="16" width="13" height="80" fill="#89959C" />
+                 <rect x="64" width="13" height="80" fill="#89959C" />
+                 <rect x="32" width="13" height="80" fill="#89959C" />
+                 <rect x="80" width="13" height="80" fill="#89959C" />
+             </svg>
+             1024px
+         </div>
+         <div class="gridDesktop gridItem">
+             <svg width="109" height="80" viewBox="0 0 109 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <rect width="13" height="80" fill="#89959C" />
+                 <rect x="96" width="13" height="80" fill="#89959C" />
+                 <rect x="48" width="13" height="80" fill="#89959C" />
+                 <rect x="32" width="13" height="80" fill="#89959C" />
+                 <rect x="16" width="13" height="80" fill="#89959C" />
+                 <rect x="64" width="13" height="80" fill="#89959C" />
+                 <rect x="80" width="13" height="80" fill="#89959C" />
+             </svg>
+             1280px
+         </div>
+         <div class="gridLarge gridItem">
+             <svg width="141" height="80" viewBox="0 0 141 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <rect width="13" height="80" fill="#89959C" />
+                 <rect x="96" width="13" height="80" fill="#89959C" />
+                 <rect x="112" width="13" height="80" fill="#89959C" />
+                 <rect x="128" width="13" height="80" fill="#89959C" />
+                 <rect x="48" width="13" height="80" fill="#89959C" />
+                 <rect x="16" width="13" height="80" fill="#89959C" />
+                 <rect x="64" width="13" height="80" fill="#89959C" />
+                 <rect x="32" width="13" height="80" fill="#89959C" />
+                 <rect x="80" width="13" height="80" fill="#89959C" />
+             </svg>
+             1440px
+         </div>
+     </div>
+     <h2>Actions</h2>
+     <div class="actionGrid">
+         <div class="actionItem" id="check-styles">
+             <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <rect x="0.5" y="0.5" width="51" height="51" stroke="#AAAAAA" stroke-dasharray="2 2" />
+                 <path
+                     d="M29.0496 29.0497L35.3824 35.3824M31.1176 24.0588C31.1176 27.9571 27.9571 31.1176 24.0588 31.1176C20.1606 31.1176 17 27.9571 17 24.0588C17 20.1606 20.1606 17 24.0588 17C27.9571 17 31.1176 20.1606 31.1176 24.0588Z"
+                     stroke="#AAAAAA" stroke-width="2" stroke-linejoin="round" />
+             </svg>
+             Check selected styles
+         </div>
+         <div class="actionItem" id="convert-text">
+             <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path
+                     d="M18.0854 26.709L16.1254 21.0049L14.0424 26.709H18.0854ZM15.2113 19.0889H17.1889L21.8734 32H19.9574L18.6479 28.1328H13.5414L12.1439 32H10.351L15.2113 19.0889ZM24.0303 19.0449H25.5684V23.7295C25.9141 23.2783 26.3271 22.9355 26.8076 22.7012C27.2881 22.4609 27.8096 22.3408 28.3721 22.3408C29.5439 22.3408 30.4932 22.7451 31.2197 23.5537C31.9521 24.3564 32.3184 25.543 32.3184 27.1133C32.3184 28.6016 31.958 29.8379 31.2373 30.8223C30.5166 31.8066 29.5176 32.2988 28.2402 32.2988C27.5254 32.2988 26.9219 32.126 26.4297 31.7803C26.1367 31.5752 25.8232 31.2471 25.4893 30.7959V32H24.0303V19.0449ZM28.1436 30.9014C28.999 30.9014 29.6377 30.5615 30.0596 29.8818C30.4873 29.2021 30.7012 28.3057 30.7012 27.1924C30.7012 26.2021 30.4873 25.3818 30.0596 24.7314C29.6377 24.0811 29.0137 23.7559 28.1875 23.7559C27.4668 23.7559 26.834 24.0225 26.2891 24.5557C25.75 25.0889 25.4805 25.9678 25.4805 27.1924C25.4805 28.0771 25.5918 28.7949 25.8145 29.3457C26.2305 30.3828 27.0068 30.9014 28.1436 30.9014ZM38.7027 22.3145C39.7633 22.3145 40.6246 22.5723 41.2867 23.0879C41.9547 23.6035 42.3561 24.4912 42.4908 25.751H40.9527C40.859 25.1709 40.6451 24.6904 40.3111 24.3096C39.9771 23.9229 39.441 23.7295 38.7027 23.7295C37.6949 23.7295 36.9742 24.2217 36.5406 25.2061C36.2594 25.8447 36.1187 26.6328 36.1187 27.5703C36.1187 28.5137 36.318 29.3076 36.7164 29.9521C37.1148 30.5967 37.7418 30.9189 38.5973 30.9189C39.2535 30.9189 39.7721 30.7197 40.1529 30.3213C40.5396 29.917 40.8062 29.3662 40.9527 28.6689H42.4908C42.315 29.917 41.8756 30.8311 41.1725 31.4111C40.4693 31.9854 39.5699 32.2725 38.4742 32.2725C37.2437 32.2725 36.2623 31.8242 35.5299 30.9277C34.7975 30.0254 34.4312 28.9004 34.4312 27.5527C34.4312 25.9004 34.8326 24.6143 35.6354 23.6943C36.4381 22.7744 37.4605 22.3145 38.7027 22.3145Z"
+                     fill="#AAAAAA" />
+                 <path d="M10.0873 33.8018H42.9127V34.6895H10.0873V33.8018Z" fill="#AAAAAA" />
+                 <rect x="0.5" y="0.5" width="51" height="51" stroke="#AAAAAA" stroke-dasharray="2 2" />
+             </svg>
+             Convert selected text
+         </div>
+         <div class="actionItem" id="generate-assets">
+             <svg width="48" height="35" viewBox="0 0 48 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path fill-rule="evenodd" clip-rule="evenodd"
+                     d="M31.5377 19.0189C31.5377 23.5433 28.1175 27.2093 23.9033 27.2093C19.686 27.2093 16.2689 23.5433 16.2689 19.0189C16.2689 14.4945 19.686 10.8285 23.9033 10.8285C28.1175 10.8285 31.5377 14.4945 31.5377 19.0189Z"
+                     stroke="#AAAAAA" stroke-width="2" stroke-linejoin="round" />
+                 <path fill-rule="evenodd" clip-rule="evenodd"
+                     d="M34.5915 7.55233L42.2259 7.55233C44.7453 7.55233 46.8066 9.76375 46.8066 12.4666L46.8066 28.8474C46.8066 31.5503 44.7453 33.7617 42.2259 33.7617L5.58066 33.7617C3.0613 33.7617 1 31.5503 1 28.8474L1 12.4666C1 9.76375 3.0613 7.55233 5.58066 7.55233L13.2151 7.55233L19.3226 1L28.484 1L34.5915 7.55233Z"
+                     stroke="#AAAAAA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+             </svg>
+             Generate Assets
+         </div>
+         <div class="actionItem" id="reset-constraints">
+             <svg width="48" height="35" viewBox="0 0 48 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path fill-rule="evenodd" clip-rule="evenodd"
+                     d="M31.5377 19.0189C31.5377 23.5433 28.1175 27.2093 23.9033 27.2093C19.686 27.2093 16.2689 23.5433 16.2689 19.0189C16.2689 14.4945 19.686 10.8285 23.9033 10.8285C28.1175 10.8285 31.5377 14.4945 31.5377 19.0189Z"
+                     stroke="#AAAAAA" stroke-width="2" stroke-linejoin="round" />
+                 <path fill-rule="evenodd" clip-rule="evenodd"
+                     d="M34.5915 7.55233L42.2259 7.55233C44.7453 7.55233 46.8066 9.76375 46.8066 12.4666L46.8066 28.8474C46.8066 31.5503 44.7453 33.7617 42.2259 33.7617L5.58066 33.7617C3.0613 33.7617 1 31.5503 1 28.8474L1 12.4666C1 9.76375 3.0613 7.55233 5.58066 7.55233L13.2151 7.55233L19.3226 1L28.484 1L34.5915 7.55233Z"
+                     stroke="#AAAAAA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+             </svg>
+             Reset Constraints
+         </div>
+     </div>
+     <div class="resultBox">
+         <div class="resultTitle">
+         </div>
+         <div class="resultData">
+
+         </div>
+     </div>
+ </div>
+
+ <script>
+     let errorCount = 0;
+     onmessage = (e) => {
+         if (e.data.pluginMessage.type == 'loading') {
+             document.querySelector('.resultBox').classList.remove('error')
+             document.querySelector('.resultBox').classList.add('loading')
+             document.querySelector('.gridChooser').classList.add('disabled');
+             if (e.data.pluginMessage.title) {
+                 document.querySelector('.resultTitle').style.display = "block"
+                 document.querySelector('.resultTitle').innerHTML = e.data.pluginMessage.title
+             } else {
+                 document.querySelector('.resultTitle').innerHTML = ''
+                 document.querySelector('.resultTitle').style.display = "none"
+             }
+             if (e.data.pluginMessage.data)
+                 document.querySelector('.resultData').innerHTML = e.data.pluginMessage.data
+             document.querySelector('.resultBox').style.display = 'block'
+         }
+         if (e.data.pluginMessage.type == 'error') {
+             document.querySelector('.resultBox').classList.remove('loading')
+             document.querySelector('.gridChooser').classList.remove('disabled');
+
+             if (errorCount > 0) {
+                 let el = document.querySelector('.resultBox').cloneNode(true);
+                 if (e.data.pluginMessage.title) {
+                     el.querySelector('.resultTitle').style.display = "block"
+                     el.querySelector('.resultTitle').innerHTML = e.data.pluginMessage.title
+                 } else {
+                     el.querySelector('.resultTitle').innerHTML = ''
+                     el.querySelector('.resultTitle').style.display = "none"
+                 }
+                 el.querySelector('.resultData').innerHTML = e.data.pluginMessage.data
+                 document.querySelector('.resultBox').insertAdjacentElement('afterend', el)
+             } else {
+                 if (e.data.pluginMessage.title) {
+                     document.querySelector('.resultTitle').style.display = "block"
+                     document.querySelector('.resultTitle').innerHTML = e.data.pluginMessage.title
+                 } else {
+                     document.querySelector('.resultTitle').innerHTML = ''
+                     document.querySelector('.resultTitle').style.display = "none"
+                 }
+                 document.querySelector('.resultData').innerHTML = e.data.pluginMessage.data
+                 document.querySelector('.resultBox').style.display = 'block'
+                 document.querySelector('.resultBox').classList.add('error')
+             }
+             errorCount++
+         }
+         if (e.data.pluginMessage.type == 'success') {
+             document.querySelector('.gridChooser').classList.remove('disabled');
+             document.querySelector('.resultBox').classList.remove('error', 'loading')
+
+             if (e.data.pluginMessage.title) {
+                 document.querySelector('.resultTitle').style.display = "block"
+                 document.querySelector('.resultTitle').innerHTML = e.data.pluginMessage.title
+             } else {
+                 document.querySelector('.resultTitle').innerHTML = ''
+                 document.querySelector('.resultTitle').style.display = "none"
+             }
+             if (e.data.pluginMessage.data)
+                 document.querySelector('.resultData').innerHTML = e.data.pluginMessage.data
+             document.querySelector('.resultBox').style.display = 'block'
+         }
+     }
+
+     function selectNode(id) {
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'select-node',
+                 params: id
+             }
+         }, '*')
+     }
+
+     function resetErrors() {
+         for (let i = errorCount; i > 1; i--) {
+             document.querySelectorAll('.resultBox')[i - 1].remove()
+         }
+         errorCount = 0;
+     }
+     document.getElementById('check-styles').onclick = () => {
+         resetErrors()
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'check-styles'
+             }
+         }, '*')
+     }
+     document.getElementById('convert-text').onclick = () => {
+         resetErrors()
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'convert-text'
+             }
+         }, '*')
+     }
+     document.getElementById('reset-constraints').onclick = () => {
+         resetErrors()
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'reset-constraints'
+             }
+         }, '*')
+     }
+     document.querySelector('#generate-assets').onclick = () => {
+         resetErrors()
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'generate-assets'
+             }
+         }, '*')
+     }
+     document.querySelector('.gridMobile').onclick = () => {
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'mobile-grid'
+             }
+         }, '*')
+     }
+     document.querySelector('.gridTablet').onclick = () => {
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'tablet-grid'
+             }
+         }, '*')
+     }
+     document.querySelector('.gridDesktop').onclick = () => {
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'desktop-grid'
+             }
+         }, '*')
+     }
+     document.querySelector('.gridLarge').onclick = () => {
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'large-grid'
+             }
+         }, '*')
+     }
+     document.getElementById('give-colours').onclick = () => {
+         parent.postMessage({
+             pluginMessage: {
+                 type: 'give-colours'
+             }
+         }, '*')
+     }
+ </script>
